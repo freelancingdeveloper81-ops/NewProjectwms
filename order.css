@@ -1,72 +1,207 @@
+/* --- Root Variables --- */
 :root {
     --primary: #0062BD;
     --dark-blue: #003b5c;
     --bg-page: #f0f4f7;
     --border: #ccc;
-    --red: #c02031;
-    --qty-yellow: #fff9c4;
+    --red: #C02031;
+    --input-yellow: #fff9c4;
+    --white: #ffffff;
 }
 
-[data-theme="dark"] { --bg-page: #0d1117; --border: #444; }
+[data-theme="dark"] {
+    --bg-page: #0d1117;
+    --white: #161b22;
+    --border: #444;
+}
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
 body { background: var(--bg-page); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
 /* Header & Nav */
-.top-bar { background: var(--primary); color: white; height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
+.top-bar { background: var(--primary); color: white; height: 65px; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; flex-shrink: 0; z-index: 1000; }
 .logo-circle { background: white; color: var(--primary); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-.software-nav { display: flex; flex: 1; justify-content: center; gap: 8px; }
-.nav-item { color: white; text-decoration: none; font-size: 0.65rem; padding: 5px 10px; border-radius: 4px; }
-.nav-item.active { background: rgba(255,255,255,0.2); }
-.user-strip { background: #fff; padding: 5px 20px; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+.software-nav { display: flex; flex: 1; justify-content: center; gap: 4px; }
+.nav-item { color: white; text-decoration: none; display: flex; flex-direction: column; align-items: center; font-size: 0.62rem; padding: 5px; opacity: 0.85; transition: 0.2s; }
+.nav-item.active, .nav-item:hover { background: rgba(255,255,255,0.2); border-radius: 4px; opacity: 1; }
+.nav-item i { font-size: 1.1rem; margin-bottom: 2px; }
 
-/* Workspace Scroll */
-.workspace { flex: 1; overflow-y: auto; padding: 15px; }
+.user-strip { background: #fff; padding: 5px 20px; border-bottom: 1px solid var(--border); font-size: 0.8rem; display: flex; justify-content: space-between; flex-shrink: 0; }
 
-/* Bento Layout */
-.main-grid { display: grid; grid-template-columns: 0.35fr 0.65fr; gap: 20px; }
-.order-card, .group-box { background: white; border: 1px solid var(--border); padding: 20px; position: relative; }
-.group-label { position: absolute; top: -10px; left: 10px; background: white; padding: 0 5px; font-size: 0.7rem; font-weight: bold; }
+/* Workspace Scrolling Fix */
+.workspace { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; }
+.workspace::-webkit-scrollbar { width: 8px; }
+.workspace::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-/* Input Colors */
-.qty-yellow { background: var(--qty-yellow) !important; border: 1.5px solid #000; font-weight: 800; text-align: center; }
-.read-only-grey { background: #eee !important; color: #555; }
+/* Components Layout */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.module-title { color: var(--primary); font-size: 1.1rem; font-weight: 800; }
 
-.input-group { margin-bottom: 12px; }
-label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 3px; }
-input, select { width: 100%; padding: 8px; border: 1px solid #999; }
+.search-section label { font-size: 0.75rem; font-weight: bold; color: #555; }
+.search-group { display: flex; gap: 5px; margin-top: 4px; }
+.search-group input { border: 1.5px solid #000; padding: 5px; width: 180px; }
+
+.main-grid { display: grid; grid-template-columns: 0.35fr 0.65fr; gap: 20px; align-items: flex-start; }
+
+/* Card & Group Box Style */
+.order-card, .group-box { background: white; border: 1px solid var(--border); padding: 25px; position: relative; }
+.group-label { position: absolute; top: -10px; left: 10px; background: white; padding: 0 8px; font-size: 0.75rem; font-weight: bold; color: #333; border: 1px solid var(--border); }
+
+/* Inputs */
+.input-group { margin-bottom: 15px; text-align: left; }
+label { display: block; font-size: 0.82rem; font-weight: 700; margin-bottom: 5px; color: #444; }
+input, select { width: 100%; padding: 8px; border: 1.5px solid #999; font-size: 0.95rem; }
+
+/* Image Specific Color Logic */
+.input-yellow { background-color: var(--input-yellow) !important; border: 1.5px solid #000 !important; font-weight: 800; text-align: center; }
+.input-readonly { background-color: #e9ecef !important; color: #495057; font-weight: bold; }
+
 .qty-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
 /* Buttons */
-.btn-blue-dark { background: var(--dark-blue); color: white; border: none; padding: 10px; font-weight: bold; cursor: pointer; margin-top: 5px; }
-.btn-red-large { background: var(--red); color: white; border: none; padding: 10px 30px; font-weight: bold; cursor: pointer; }
-.btn-search, .btn-red-sm { background: var(--red); color: white; border: none; padding: 5px 10px; cursor: pointer; }
+.entry-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+.btn-red-sm { background: var(--red); color: white; border: none; padding: 5px 15px; cursor: pointer; font-weight: bold; border-radius: 2px; }
+.btn-blue-outline { border: 1px solid var(--primary); background: transparent; color: var(--primary); padding: 10px; font-weight: bold; cursor: pointer; }
+.btn-blue-dark { background: var(--dark-blue); color: white; border: none; padding: 12px; font-weight: bold; cursor: pointer; }
+.btn-red-large { background: var(--red); color: white; border: none; padding: 12px 35px; font-weight: 800; cursor: pointer; border-radius: 4px; }
 
-/* MODAL STYLING (The Popup in image) */
-.modal-overlay { 
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-    background: rgba(0,0,0,0.5); display: none; z-index: 2000; 
-    align-items: center; justify-content: center; 
-}
-.modal-window { background: white; width: 450px; border: 2px solid var(--dark-blue); box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-radius: 4px; overflow: hidden; }
-.modal-header { background: var(--dark-blue); color: white; padding: 8px 15px; display: flex; justify-content: space-between; font-weight: bold; }
-.close-modal { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
-.modal-body { padding: 30px; }
-.modal-title { color: var(--red); text-align: center; margin-bottom: 15px; font-size: 1.4rem; }
-.modal-select { border: 2.5px solid var(--primary); padding: 10px; font-weight: bold; margin-bottom: 20px; }
-.modal-input-row { display: flex; gap: 10px; }
-.big-input { font-size: 1.5rem; padding: 10px; flex: 1; }
-.btn-pay-confirm { background: var(--red); color: white; border: none; padding: 10px 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+/* Billing Table & Summary */
+.sub-section { border: 1px solid var(--border); padding: 15px; margin-bottom: 15px; position: relative; }
+.section-tag { position: absolute; top: -10px; left: 10px; background: white; font-size: 0.7rem; font-weight: bold; padding: 0 5px; }
+.info-row { display: grid; grid-template-columns: 0.8fr 1.5fr 2fr; gap: 10px; }
+.meta-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
 
-/* Table and Totals */
-.table-container { height: 250px; overflow-y: auto; border: 1px solid var(--border); margin: 15px 0; }
+.table-container { height: 250px; overflow-y: auto; border: 1px solid var(--border); margin-bottom: 15px; }
 table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-th { background: #f8f8f8; position: sticky; top: 0; padding: 10px; border: 1px solid var(--border); text-align: left; }
-td { padding: 8px; border: 1px solid var(--border); }
-.totals-area { width: 220px; text-align: right; }
-.total-row { display: flex; justify-content: space-between; font-size: 1.1rem; margin-top: 5px; }
+th { background: #f8f9fa; border: 1px solid var(--border); padding: 10px; text-align: left; position: sticky; top: 0; z-index: 10; }
+td { padding: 10px; border: 1px solid var(--border); }
 
-.status-bar { background: var(--primary); color: white; height: 35px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-size: 0.7rem; }
+.billing-footer { display: flex; justify-content: space-between; align-items: flex-end; }
+.totals-pane { width: 220px; text-align: right; }
+.tot-row { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; font-weight: bold; }
+.tot-row input { width: 110px; border: 1.5px solid #000; text-align: right; padding: 5px; font-weight: 900; }
+
+/* Status Bar */
+.status-bar { background: var(--primary); color: white; height: 35px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; font-size: 0.75rem; flex-shrink: 0; position: fixed; bottom: 0; width: 100%; }
+#theme-toggle { background: none; border: none; color: white; cursor: pointer; font-size: 1rem; }
+
+/* Advance Search Modal Styles */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; z-index: 2000; align-items: center; justify-content: center; }
+.modal-window { background: white; width: 85%; max-width: 900px; border: 2.5px solid var(--primary); box-shadow: 0 10px 40px rgba(0,0,0,0.3); border-radius: 4px; }
+.modal-header { background: var(--primary); color: white; padding: 10px 15px; display: flex; justify-content: space-between; font-weight: bold; }
+.close-x { background: #c02031; color: white; border: none; padding: 0 8px; cursor: pointer; }
+.modal-body { padding: 25px; }
+.modal-search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+.modal-table-scroll { height: 350px; overflow-y: auto; border: 1px solid var(--border); }
+
+/* Table selection style */
+.adv-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.adv-table th { background: #f8f9fa; position: sticky; top: 0; padding: 12px; border-bottom: 2px solid var(--border); text-align: left; }
+.adv-table td { padding: 10px; border-bottom: 1px solid var(--border); }
+.adv-table tr:hover { background: #eef7ff; cursor: pointer; color: var(--primary); }
+
+.btn-select-sm { background: var(--primary); color: white; border: none; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
+
+
+
+/* --- 1. Global Table Professionalism --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff; /* Base color set to White */
+    font-size: 0.85rem;
+}
+
+/* Ensure data rows are white */
+tbody tr {
+    background-color: #ffffff;
+    transition: background 0.2s;
+}
+
+/* Zebra Striping (Optional but professional) */
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; 
+}
+
+/* --- 2. Advanced Search Modal Table Specifics --- */
+.modal-table-scroll {
+    height: 350px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    background-color: #ffffff; /* Frame background white */
+}
+
+.adv-table th {
+    background-color: #f1f1f1; /* Light professional grey */
+    color: #333;
+    font-weight: 700;
+    padding: 12px;
+    text-align: left;
+    border: 1px solid var(--border);
+    position: sticky; /* Keep headers at top while scrolling */
+    top: 0;
+    z-index: 10;
+}
+
+.adv-table td {
+    padding: 10px;
+    border: 1px solid var(--border);
+    color: #444;
+    vertical-align: middle;
+}
+
+/* --- 3. Interactive Row States (The "Blue Highlight") --- */
+.adv-table tr:hover {
+    background-color: #e8f4ff; /* Very light blue hover */
+    cursor: pointer;
+}
+
+/* The Active/Selected row as per your software image */
+.adv-table tr.selected-row, 
+.adv-table tr:active {
+    background-color: #0078D7 !important; /* Standard Windows Blue */
+    color: #ffffff !important;
+}
+
+/* Ensure text stays white when row is selected */
+.adv-table tr.selected-row td,
+.adv-table tr.selected-row b {
+    color: #ffffff !important;
+}
+
+/* --- 4. Search Input Box in Modal --- */
+.modal-search-box input {
+    background-color: var(--input-yellow) !important;
+    border: 1.5px solid #000 !important;
+    padding: 10px;
+    font-weight: 800;
+    flex: 1;
+}
+
+/* --- 5. Status Badge Colors --- */
+.status-active {
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+/* --- 6. Dark Mode Adjustments --- */
+[data-theme="dark"] table {
+    background-color: #1e293b; /* Dark Slate in dark mode */
+}
+[data-theme="dark"] tbody tr {
+    background-color: #1e293b;
+}
+[data-theme="dark"] th {
+    background-color: #0f172a;
+    color: #f1f5f9;
+}
+[data-theme="dark"] td {
+    border-color: #334155;
+    color: #cbd5e1;
+}
+[data-theme="dark"] .adv-table tr:hover {
+    background-color: rgba(0, 98, 189, 0.2);
+}
 
 
 /* --- Professional Color Scheme & Variables --- */
@@ -224,3 +359,4 @@ body {
 .menu-link span {
   color: #ffffff;
 }
+
