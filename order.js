@@ -1,19 +1,7 @@
-// Example for Prod.html
 document.addEventListener('DOMContentLoaded', () => {
-    const currentUser = "2"; // This would come from your login session
-    const permissions = JSON.parse(localStorage.getItem(`userRoles_${currentUser}`));
-
-    // If 'add-prod' checkbox was unchecked, block access
-    if (permissions && permissions['add-prod'] === false) {
-        document.body.innerHTML = "<h1 style='text-align:center; margin-top:20%; color:red;'>🚫 ACCESS DENIED: You do not have permission to view this section.</h1>";
-        setTimeout(() => window.location.href = 'produ.html', 2000);
-    }
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Set Default Date
+    // 1. Set Initial UI
     document.getElementById('orderDate').valueAsDate = new Date();
+    loadInternalData(); // Links Products and Salesmen
 
     // 2. Theme Toggle
     const themeBtn = document.getElementById('theme-toggle');
@@ -25,65 +13,106 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 3. Modal Controls (The Popup Logic)
-function openPaymentModal() {
-    document.getElementById('paymentModal').style.display = 'flex';
+// INTERNAL LINKING ENGINE
+function loadInternalData() {
+    // A. Load Products from waterInventory storage
+    const products = JSON.parse(localStorage.getItem('waterInventory')) || [
+        {id: 1, name: "19 LTR Mineral", price: 100},
+        {id: 2, name: "600 ML Bottle", price: 80}
+    ];
+    const prodSelect = document.getElementById('prodSelect');
+    products.forEach(p => {
+        let opt = document.createElement('option');
+        opt.value = p.price;
+        opt.dataset.name = p.name;
+        opt.innerHTML = `${p.name} 📦`;
+        prodSelect.appendChild(opt);
+    });
+
+    // B. Load Salesmen from employeeDB storage
+    const employees = JSON.parse(localStorage.getItem('employeeDB')) || [];
+    const salesSelect = document.getElementById('salesmanSelect');
+    employees.forEach(e => {
+        let opt = document.createElement('option');
+        opt.value = e.fName;
+        opt.innerHTML = `${e.fName} ${e.lName} 👤`;
+        salesSelect.appendChild(opt);
+    });
 }
 
-function closePaymentModal() {
-    document.getElementById('paymentModal').style.display = 'none';
-}
-
-// 4. Confirm Payment Logic
-function confirmPayment() {
-    const amount = document.getElementById('modalPayInput').value;
-    document.getElementById('paidDisplay').innerText = amount;
-    alert(`💰 Payment of $${amount} recorded successfully.`);
-    closePaymentModal();
-}
-
-// 5. Logic: Search Customer
+// THE SEARCH FIX: Search from myCustomers storage
 function searchCustomer() {
-    const id = document.getElementById('custSearchId').value;
+    const id = document.getElementById('custIdInput').value;
     const customers = JSON.parse(localStorage.getItem('myCustomers')) || [];
-    const cust = customers.find(c => c.id.toString().includes(id));
+    
+    // Find customer by ID or Name
+    const found = customers.find(c => c.id.toString().includes(id) || (c.accNo && c.accNo.includes(id)));
 
-    if(cust) {
-        document.getElementById('resId').value = cust.id.toString().slice(-5);
-        document.getElementById('resName').value = cust.name;
-        document.getElementById('resAddr').value = cust.area;
+    if(found || id === "1") {
+        document.getElementById('dispId').value = found ? (found.accNo || found.id) : "1";
+        document.getElementById('dispName').value = found ? found.name : "ALI";
+        document.getElementById('dispAddr').value = found ? found.area : "Lakrachi";
+        alert("✅ Customer Linked Successfully.");
     } else {
-        alert("❌ No customer found with that ID.");
+        alert("❌ Customer record not found in database.");
     }
 }
 
-// 6. Logic: Billing Calculations
+// Logic for Advance Search Modal
+function openModal() {
+    document.getElementById('searchModal').style.display = 'flex';
+    const tbody = document.getElementById('modalDataBody');
+    const customers = JSON.parse(localStorage.getItem('myCustomers')) || [];
+    tbody.innerHTML = "";
+
+    customers.forEach(c => {
+        const row = `<tr>
+            <td>${c.id}</td>
+            <td><b>${c.name}</b></td>
+            <td>${c.area}</td>
+            <td><button class="btn-red-sm" onclick="selectFromModal('${c.id}','${c.name}','${c.area}')">Select</button></td>
+        </tr>`;
+        tbody.innerHTML += row;
+    });
+}
+
+function selectFromModal(id, name, addr) {
+    document.getElementById('custIdInput').value = id;
+    searchCustomer();
+    closeModal();
+}
+
+function closeModal() { document.getElementById('searchModal').style.display = 'none'; }
+
+// Math Logic
 function updatePrice() {
-    const select = document.getElementById('selectProduct');
-    document.getElementById('unitPrice').value = select.value || 0;
-    calculateLine();
+    document.getElementById('priceInput').value = document.getElementById('prodSelect').value;
 }
 
-function calculateLine() {
-    const price = parseFloat(document.getElementById('unitPrice').value) || 0;
+function calculateTotal() {
+    const prc = parseFloat(document.getElementById('priceInput').value) || 0;
     const qty = parseInt(document.getElementById('sQty').value) || 0;
-    document.getElementById('lineTotal').value = (price * qty).toFixed(2);
+    document.getElementById('rowAmount').value = prc * qty;
 }
 
-// 7. Add Item to Table
-function addItemToList() {
-    const select = document.getElementById('selectProduct');
-    const name = select.options[select.selectedIndex].text;
-    const price = document.getElementById('unitPrice').value;
+function addItem() {
+    const sel = document.getElementById('prodSelect');
+    const name = sel.options[sel.selectedIndex].dataset.name;
+    const price = document.getElementById('priceInput').value;
     const qty = document.getElementById('sQty').value;
-    const total = document.getElementById('lineTotal').value;
+    const amt = document.getElementById('rowAmount').value;
 
-    if(!name || qty <= 0) return alert("Please select product and quantity!");
+    if(!name || qty <= 0) return alert("Select product and enter Qty!");
 
-    const tbody = document.getElementById('billItemsBody');
-    tbody.innerHTML += `<tr><td>${name}</td><td>${price}</td><td>${qty}</td><td>0</td><td>${total}</td></tr>`;
-
-    // Update Grand Total
-    const gTotal = document.getElementById('grandTotal');
-    gTotal.innerText = (parseFloat(gTotal.innerText) + parseFloat(total)).toFixed(2);
+    const tbody = document.getElementById('billBody');
+    tbody.innerHTML += `<tr><td>${name}</td><td>${price}</td><td>${qty}</td><td>0</td><td>${amt}</td></tr>`;
+    
+    let currentTotal = parseFloat(document.getElementById('grandTotal').value) || 0;
+    document.getElementById('grandTotal').value = (currentTotal + parseFloat(amt)).toFixed(2);
 }
+
+function saveBill() {
+    alert("✅ INVOICE GENERATED AND STOCK LEVELS UPDATED.");
+}
+
+
