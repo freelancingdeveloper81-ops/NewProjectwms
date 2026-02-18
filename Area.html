@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Area Assign | AquaFlow ERP</title>
+    <title>Area Management | AquaFlow Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="Area.css">
 </head>
 <body>
 
-    <!-- Professional Top Bar -->
+     <!-- Header Section -->
     <header class="top-bar">
         <div class="header-logo">
-            <div class="logo-circle"><i class="fas fa-droplet"></i></div>
+            <div class="logo-circle">
+                <i class="fas fa-droplet"></i>
+            </div>
             <div class="logo-text">
                 <h1>Drinking Water 💧</h1>
                 <p>Inventory Software</p>
             </div>
         </div>
-        
-       <nav class="icon-nav">
+
+        <nav class="icon-nav">
             <a href="#" class="nav-item">
                 <i class="fas fa-chart-line"></i>
                 <span>Dashboard 📊</span>
@@ -83,7 +85,7 @@
     
     <!-- Dropdown Content (Exact match to your image) -->
     <div class="dropdown-content">
-        <a href="cust.html">New / Edit Employee 👤+</a>
+        <a href="emp.html">New / Edit Employee 👤+</a>
         <a href="Area.html">Area Assign To Employee 📍</a>
     </div>
 </div>
@@ -146,63 +148,65 @@
         </nav>
 
         <div class="window-controls">
-            <button id="theme-toggle"><i class="fas fa-moon"></i></button>
+            <button id="theme-toggle" title="Toggle Light/Dark Mode"><i class="fas fa-moon"></i></button>
             <i class="fas fa-window-minimize"></i>
-            <i class="fas fa-rectangle-xmark close-btn" onclick="location.href='produ.html'"></i>
+            <i class="fas fa-window-maximize"></i>
+            <i class="fas fa-rectangle-xmark close-btn"></i>
         </div>
     </header>
 
     <div class="user-strip">
         <span><b>User:</b> Tahir Qureshi 👤</span>
+        <span class="module-label">AREA ASSIGNMENT MANAGER 📍</span>
     </div>
 
     <main class="workspace">
-        <div class="page-title">
-            <h2>AREA ASSIGN 📍</h2>
-        </div>
-
         <div class="main-grid">
-            <!-- Left Pane: Assign Actions -->
+            <!-- LEFT: Assign Actions -->
             <section class="action-pane">
                 <div class="group-box">
                     <span class="group-label">Area Assign To Employee</span>
+                    
                     <div class="input-set">
                         <label>Select Employee</label>
                         <select id="empSelect">
                             <option value="">SELECT EMPLOYEE 👤</option>
-                            <!-- Linked from Employee Module -->
+                            <!-- Data pulled from Staff Module -->
                         </select>
                     </div>
+
                     <div class="input-set">
                         <label>Select Area</label>
                         <select id="areaSelect">
                             <option value="">SELECT AREA 🗺️</option>
-                            <!-- Linked from Add New Area Logic -->
+                            <!-- Data added via Add Area Popup -->
                         </select>
                     </div>
+
                     <div class="btn-stack">
-                        <button class="btn-blue" onclick="assignArea()">Assign Area 🔗</button>
-                        <button class="btn-blue" onclick="toggleAreaModal(true)">Add New Area ➕</button>
+                        <button class="btn-blue-dark" onclick="assignAreaToEmployee()">Assign Area 🔗</button>
+                        <button class="btn-blue-dark" onclick="toggleAreaModal(true)">Add New Area ➕</button>
                         <button class="btn-red" onclick="location.reload()">Refresh 🔄</button>
                     </div>
                 </div>
             </section>
 
-            <!-- Right Pane: List -->
+            <!-- RIGHT: Employee Area List -->
             <section class="list-pane">
                 <div class="group-box">
                     <span class="group-label">Employee Area List</span>
-                    <div class="table-scroll">
+                    <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
                                     <th>SNO</th>
+                                    <th>Employee Name</th>
                                     <th>Area Name</th>
                                     <th>Total Customer Count in Area</th>
                                 </tr>
                             </thead>
                             <tbody id="areaTableBody">
-                                <!-- Data will load here -->
+                                <!-- JS Populated Output -->
                             </tbody>
                         </table>
                     </div>
@@ -210,26 +214,26 @@
             </section>
         </div>
 
-        <!-- Add New Area Modal (Popup) -->
+        <!-- MODAL POPUP: Add New Area (As seen in image) -->
         <div class="modal-overlay" id="areaModal">
             <div class="modal-window">
                 <div class="modal-header">
                     <span>Add New Area</span>
-                    <button class="close-modal" onclick="toggleAreaModal(false)">X</button>
+                    <button class="close-x" onclick="toggleAreaModal(false)">X</button>
                 </div>
                 <div class="modal-body">
                     <label>Enter Area Name</label>
-                    <input type="text" id="newAreaInput" placeholder="e.g. Gulshan-e-Iqbal" class="yellow-input">
-                    <button class="btn-add-area" onclick="saveNewArea()">Add Area 🚩</button>
+                    <input type="text" id="newAreaInput" class="yellow-input" placeholder="e.g. Gulshan">
+                    <button class="btn-add-modal" onclick="addNewAreaToStorage()">Add Area</button>
                 </div>
             </div>
         </div>
     </main>
 
     <footer class="status-bar">
-        <div class="status-left">Copyright all rights reserved by <b>SOFTWEBPK</b></div>
+        <div class="status-left">© SOFTWEBPK - Logistics Control</div>
         <div class="status-center">App Code: <b>RG-Demo</b></div>
-        <div class="status-right">Help Line: <b>0092-315-1150070</b> 📞</div>
+        <div class="status-right">Database: <span style="color:#22c55e;">Synced ●</span></div>
     </footer>
 
     <script src="Area.js"></script>
