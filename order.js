@@ -115,4 +115,3 @@ function saveBill() {
     alert("✅ INVOICE GENERATED AND STOCK LEVELS UPDATED.");
 }
 
-
